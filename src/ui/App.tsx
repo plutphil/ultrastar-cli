@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 import { Box, Text, useApp, useInput } from "ink";
 import type { FC } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Page, type Song, searchSongs } from "../api/usdb/search.ts";
 import { checkYtDlpAvailable } from "../api/youtube/check.ts";
 import { ytDlpInstallHint } from "../platform.ts";
@@ -20,7 +20,12 @@ import { downloadSong } from "./downloadSong.ts";
 
 type Mode = "form" | "results";
 
-export const App: FC = () => {
+type AppProps = {
+  initialArtist?: string;
+  initialTitle?: string;
+};
+
+export const App: FC<AppProps> = ({ initialArtist = "", initialTitle = "" }) => {
   const { exit } = useApp();
 
   const [mode, setMode] = useState<Mode>("form");
@@ -28,8 +33,8 @@ export const App: FC = () => {
     "artist",
   );
 
-  const [artist, setArtist] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
+  const [artist, setArtist] = useState<string>(initialArtist);
+  const [title, setTitle] = useState<string>(initialTitle);
   const [limit] = useState<number>(20);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -53,6 +58,7 @@ export const App: FC = () => {
   );
 
   const canPaginate = useMemo(() => totalPages > 1, [totalPages]);
+  const hasRunInitialSearch = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -131,6 +137,14 @@ export const App: FC = () => {
   const onSubmitSearch = useCallback(() => {
     void fetchPage(1);
   }, [fetchPage]);
+
+  useEffect(() => {
+    const hasInitialQuery = Boolean(initialArtist || initialTitle);
+    if (cookie && hasInitialQuery && !hasRunInitialSearch.current) {
+      hasRunInitialSearch.current = true;
+      void fetchPage(1);
+    }
+  }, [cookie, fetchPage, initialArtist, initialTitle]);
 
   const downloadSelectedSong = useCallback(
     async (index?: number) => {

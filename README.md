@@ -45,6 +45,13 @@ npx ultrastar
 bunx --bun ultrastar
 ```
 
+You can also prefill and immediately run an artist/title search:
+```bash
+bunx --bun ultrastar "Calvin Harris" "One Kiss"
+```
+
+Quote artist and song titles that contain spaces. Omit both arguments to open the interactive search form.
+
 The first run will check yt-dlp and initialize a session. Use the search form, pick a song, and press Enter to download. Your songs will be saved under `./songs/Artist - Title/`.
 
 
