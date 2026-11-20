@@ -47,7 +47,11 @@ bunx --bun ultrastar
 
 You can also prefill and immediately run an artist/title search:
 ```bash
-bunx --bun ultrastar "Calvin Harris" "One Kiss"
+bunx --bun ultrastar "<Artist>" "<Title>"
+
+or
+
+bunx --bun ultrastar <Artist> - <Title>
 ```
 
 Quote artist and song titles that contain spaces. Omit both arguments to open the interactive search form.
