@@ -56,7 +56,7 @@ await rm("../build", {
 
 // Build the CLI
 const result = await Bun.build({
-  entrypoints: ["index.tsx"],
+  entrypoints: ["cli.tsx"],
   outdir: "../build/dist",
   target: "node",
   minify: {
@@ -102,7 +102,7 @@ const packageJsonBuild = {
   license: packageJson.license,
   homepage: packageJson.homepage,
   bin: {
-    ultrastar: "./dist/index.js",
+    ultrastar: "./dist/cli.js",
   },
 };
 
